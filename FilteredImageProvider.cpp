@@ -46,9 +46,13 @@ Filter parseFilter(const QString &input)
     for (QString el : fields[1].split(","))
         matrix.append(el.toInt());
 
-    int divisor = fields[2].toInt();
+    QStringList anchorFields = fields[2].split(",");
+    QPoint anchor{anchorFields[0].toInt(), anchorFields[1].toInt()};
 
-    return Filter{columns, matrix, divisor};
+    int divisor = fields[3].toInt();
+    int offset = fields[4].toInt();
+
+    return Filter{columns, matrix, anchor, divisor, offset};
 }
 
 ostream &operator<<(ostream &stream, const QString &string) {

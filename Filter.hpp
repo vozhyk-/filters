@@ -9,8 +9,9 @@ class Filter
 public:
     using matrixT = QVector<int>;
 
-    Filter(int columns, matrixT matrix, int divisor) :
-        columns{columns}, matrix{matrix}, divisor{divisor}
+    Filter(int columns, matrixT matrix, QPoint anchor, int divisor, int offset) :
+        columns{columns}, matrix{matrix}, anchor{anchor},
+        divisor{divisor}, offset{offset}
     {
     }
 
@@ -19,7 +20,9 @@ public:
 private:
     int columns;
     matrixT matrix;
+    QPoint anchor;
     int divisor;
+    int offset;
 
     QSize size() {
         return QSize{columns, matrix.length() / columns};

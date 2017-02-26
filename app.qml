@@ -76,7 +76,9 @@ ApplicationWindow {
             return {
                 columns: matrixGrid.columns,
                 matrix: matrix,
-                divisor: 9
+                anchor: [1, 1],
+                divisor: parseInt(divisorField.text),
+                offset: parseInt(offsetField.text)
             }
         }
 
@@ -84,6 +86,8 @@ ApplicationWindow {
             for (var i in filter.matrix) {
                 matrixGrid.children[i].text = filter.matrix[i]
             }
+            divisorField.text = filter.divisor;
+            offsetField.text = filter.offset;
         }
 
         function makeFilteredUrl(filter) {
@@ -94,7 +98,9 @@ ApplicationWindow {
         function serializeFilter(filter) {
             return filter.columns + ":" +
                 filter.matrix + ":" +
-                filter.divisor
+                filter.anchor + ":" +
+                filter.divisor + ":" +
+                filter.offset
         }
 
         property variant predefinedFilters
@@ -107,18 +113,51 @@ ApplicationWindow {
                     matrix: [1, 1, 1,
                              1, 1, 1,
                              1, 1, 1],
-                    divisor: 9
+                    anchor: [1, 1],
+                    divisor: 9,
+                    offset: 0
                 }
             },
+
             {
                 text: "Sharpen",
                 filter: {
                     rows: 3,
                     columns: 3,
+                    matrix: [ 0, -1,  0,
+                             -1,  5, -1,
+                              0, -1,  0],
+                    anchor: [1, 1],
+                    divisor: 1,
+                    offset: 0
+                }
+            },
+
+            {
+                text: "Mean removal",
+                filter: {
+                    rows: 3,
+                    columns: 3,
+                    matrix: [-1, -1, -1,
+                             -1,  9, -1,
+                             -1, -1, -1],
+                    anchor: [1, 1],
+                    divisor: 1,
+                    offset: 0
+                }
+            },
+
+            {
+                text: "Horizontal edge detection",
+                filter: {
+                    rows: 3,
+                    columns: 3,
                     matrix: [0, -1, 0,
-                             -1, 5, -1,
-                             0, -1, 0],
-                    divisor: 1
+                             0,  1, 0,
+                             0,  0, 0],
+                    anchor: [1, 1],
+                    divisor: 1,
+                    offset: 127
                 }
             }
         ]
@@ -134,21 +173,50 @@ ApplicationWindow {
 
                     TextField {
                         placeholderText: "0"
-                        validator: RegExpValidator {
-                            regExp: /\d+/
+                        validator: IntValidator {}
+
+                        Keys.onSpacePressed: {
+                            console.log("TODO set anchor here")
                         }
                     }
                 }
             }
 
-            ComboBox {
-                Component.onCompleted: {
-                    model = filterDialog.predefinedFilters
+            Column {
+                ComboBox {
+                    Layout.columnSpan: 2
 
-                    filterDialog.setFilter(model[0].filter)
+                    Component.onCompleted: {
+                        model = filterDialog.predefinedFilters
+
+                        filterDialog.setFilter(model[0].filter)
+                    }
+
+                    onActivated: filterDialog.setFilter(model[index].filter)
                 }
 
-                onActivated: filterDialog.setFilter(model[index].filter)
+                Grid {
+                    columns: 2
+
+                    Text {
+                        text: "Divisor: "
+                        anchors.verticalCenter: parent.center
+                    }
+                    TextField {
+                        id: divisorField
+                        placeholderText: "1"
+                        validator: IntValidator {}
+                    }
+
+                    Text {
+                        text: "Offset: "
+                    }
+                    TextField {
+                        id: offsetField
+                        placeholderText: "0"
+                        validator: IntValidator {}
+                    }
+                }
             }
         }
     }

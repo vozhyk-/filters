@@ -25,10 +25,11 @@ void Filter::applyAtPoint(
 
 QRgb Filter::colorAtPoint(const QImage &original, const QPoint &point)
 {
-    QPoint anchor{1, 1};
     QRect rect{point - anchor, size()};
 
-    tuple<int, int, int> result{0, 0, 0};
+    int resultR{0};
+    int resultG{0};
+    int resultB{0};
 
     for (int y = rect.y(), filterY = 0;
          y < rect.y() + rect.height();
@@ -45,20 +46,17 @@ QRgb Filter::colorAtPoint(const QImage &original, const QPoint &point)
             QRgb rgb = original.pixel(x, y);
             int multiplier = get(filterX, filterY);
 
-            std::get<0>(result) += qRed(rgb) * multiplier;
-            std::get<1>(result) += qGreen(rgb) * multiplier;
-            std::get<2>(result) += qBlue(rgb) * multiplier;
+            resultR += qRed(rgb) * multiplier;
+            resultG += qGreen(rgb) * multiplier;
+            resultB += qBlue(rgb) * multiplier;
         }
     }
 
-    std::get<0>(result) /= divisor;
-    std::get<1>(result) /= divisor;
-    std::get<2>(result) /= divisor;
+    resultR = resultR / divisor + offset;
+    resultG = resultG / divisor + offset;
+    resultB = resultB / divisor + offset;
 
-    return qRgb(
-        std::get<0>(result),
-        std::get<1>(result),
-        std::get<2>(result));
+    return qRgb(resultR, resultG, resultB);
 }
 
 ostream &operator<<(ostream &stream, const QPoint &point) {
