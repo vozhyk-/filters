@@ -52,6 +52,7 @@ ApplicationWindow {
 
     Dialog {
         id: filterDialog
+
         onAccepted: {
             var filter = getFilter()
 
@@ -144,6 +145,8 @@ ApplicationWindow {
             ComboBox {
                 Component.onCompleted: {
                     model = filterDialog.predefinedFilters
+
+                    filterDialog.setFilter(model[0].filter)
                 }
 
                 onActivated: filterDialog.setFilter(model[index].filter)
