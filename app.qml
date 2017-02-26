@@ -28,7 +28,11 @@ ApplicationWindow {
     FileDialog {
         id: openDialog
         folder: shortcuts.home
-        onAccepted: image.source = openDialog.fileUrls[0]
+        onAccepted: loadImage(openDialog.fileUrls[0])
+    }
+
+    function loadImage(url) {
+        image.source = url
     }
 
     Action {
@@ -52,7 +56,12 @@ ApplicationWindow {
             var filter = parseFilter(filterGrid)
 
             console.log("Filter: " + filter)
-            image.source = ""
+            loadImage(makeFilteredUrl(filter))
+        }
+
+        function makeFilteredUrl(filter) {
+            return "image://filtered/" +
+                JSON.stringify(filter) + ";" + image.source
         }
 
         function parseFilter(grid) {
