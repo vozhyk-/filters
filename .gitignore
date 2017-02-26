@@ -1,0 +1,7 @@
+# qmake outputs
+Makefile
+.qmake.stash
+
+# c++ outputs
+filters
+*.o
