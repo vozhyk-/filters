@@ -33,11 +33,14 @@ QString filterPortion(const QString &id)
 
 Filter parseFilter(const QString &input)
 {
-    int columns = input.section(":", 0, 0).toInt();
+    QStringList fields = input.split(":");
+    int columns = fields[0].toInt();
 
-    QVector<double> matrix{};
-    for (QString el : input.section(":", 1).split(","))
+    Filter::matrixT matrix{};
+    for (QString el : fields[1].split(","))
         matrix.append(el.toDouble());
 
-    return Filter{columns, matrix};
+    int divisor = fields[2].toInt();
+
+    return Filter{columns, matrix, divisor};
 }

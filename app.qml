@@ -69,7 +69,7 @@ ApplicationWindow {
 
                 for (var j = 0; j < matrixGrid.columns; j++) {
                     var field = matrixGrid.children[i * matrixGrid.rows + j]
-                    var matrixCell = parseFloat(field.text)
+                    var matrixCell = parseInt(field.text)
                     matrixRow.push(matrixCell)
                 }
             }
@@ -136,7 +136,7 @@ ApplicationWindow {
                     TextField {
                         placeholderText: "0"
                         validator: RegExpValidator {
-                            regExp: /\d+(\.\d+)?/
+                            regExp: /\d+/
                         }
                     }
                 }

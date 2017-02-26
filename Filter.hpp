@@ -7,8 +7,10 @@
 class Filter
 {
 public:
-    Filter(int columns, QVector<double> matrix) :
-        columns{columns}, matrix{matrix}
+    using matrixT = QVector<int>;
+
+    Filter(int columns, matrixT matrix, int divisor) :
+        columns{columns}, matrix{matrix}, divisor{divisor}
     {
     }
 
@@ -16,7 +18,8 @@ public:
 
 private:
     int columns;
-    QVector<double> matrix{};
+    matrixT matrix;
+    int divisor;
 };
 
 #endif // FILTER_HPP
