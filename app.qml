@@ -53,27 +53,37 @@ ApplicationWindow {
     Dialog {
         id: filterDialog
         onAccepted: {
-            var filter = parseFilter(filterGrid)
+            var filter = getFilter()
 
             console.log("Filter: " + filter)
             loadImage(makeFilteredUrl(filter))
         }
 
-        function parseFilter(grid) {
-            var filter = []
+        function getFilter() {
+            var matrix = []
 
-            for (var i = 0; i < filterGrid.rows; i++) {
-                var filterRow = []
-                filter.push(filterRow)
+            for (var i = 0; i < matrixGrid.rows; i++) {
+                var matrixRow = []
+                matrix.push(matrixRow)
 
-                for (var j = 0; j < filterGrid.columns; j++) {
-                    var field = filterGrid.children[i * filterGrid.rows + j]
-                    var filterCell = field.text
-                    filterRow.push(filterCell)
+                for (var j = 0; j < matrixGrid.columns; j++) {
+                    var field = matrixGrid.children[i * matrixGrid.rows + j]
+                    var matrixCell = parseFloat(field.text)
+                    matrixRow.push(matrixCell)
                 }
             }
 
-            return filter
+            return {
+                columns: matrixGrid.columns,
+                matrix: matrix,
+                divisor: 9
+            }
+        }
+
+        function setFilter(filter) {
+            for (var i in filter.matrix) {
+                matrixGrid.children[i].text = filter.matrix[i]
+            }
         }
 
         function makeFilteredUrl(filter) {
@@ -82,23 +92,61 @@ ApplicationWindow {
         }
 
         function serializeFilter(filter) {
-            return filter[0].columns + ":" + filter;
+            return filter.columns + ":" +
+                filter.matrix + ":" +
+                filter.divisor
         }
 
-        GridLayout {
-            id: filterGrid
-            rows: 3
-            columns: 3
+        property variant predefinedFilters
+        predefinedFilters: [
+            {
+                text: "Blur",
+                filter: {
+                    rows: 3,
+                    columns: 3,
+                    matrix: [1, 1, 1,
+                             1, 1, 1,
+                             1, 1, 1],
+                    divisor: 9
+                }
+            },
+            {
+                text: "Sharpen",
+                filter: {
+                    rows: 3,
+                    columns: 3,
+                    matrix: [0, -1, 0,
+                             -1, 5, -1,
+                             0, -1, 0],
+                    divisor: 1
+                }
+            }
+        ]
 
-            Repeater {
-                model: filterGrid.rows * filterGrid.columns
+        Row {
+            GridLayout {
+                id: matrixGrid
+                rows: 3
+                columns: 3
 
-                TextField {
-                    placeholderText: "0"
-                    validator: RegExpValidator {
-                        regExp: /\d+(\.\d+)?/
+                Repeater {
+                    model: matrixGrid.rows * matrixGrid.columns
+
+                    TextField {
+                        placeholderText: "0"
+                        validator: RegExpValidator {
+                            regExp: /\d+(\.\d+)?/
+                        }
                     }
                 }
+            }
+
+            ComboBox {
+                Component.onCompleted: {
+                    model = filterDialog.predefinedFilters
+                }
+
+                onActivated: filterDialog.setFilter(model[index].filter)
             }
         }
     }
