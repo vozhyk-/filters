@@ -49,7 +49,27 @@ ApplicationWindow {
     Dialog {
         id: filterDialog
         onAccepted: {
+            var filter = parseFilter(filterGrid)
+
+            console.log("Filter: " + filter)
             image.source = ""
+        }
+
+        function parseFilter(grid) {
+            var filter = []
+
+            for (var i = 0; i < filterGrid.rows; i++) {
+                var filterRow = []
+                filter.push(filterRow)
+
+                for (var j = 0; j < filterGrid.columns; j++) {
+                    var field = filterGrid.children[i * filterGrid.rows + j]
+                    var filterCell = field.text
+                    filterRow.push(filterCell)
+                }
+            }
+
+            return filter
         }
 
         GridLayout {
