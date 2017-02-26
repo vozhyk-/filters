@@ -1,10 +1,16 @@
 #include "FilteredImageProvider.hpp"
 
+#include <iostream>
+
 #include "Filter.hpp"
+
+using namespace std;
 
 QString imagePathPortion(const QString &id);
 QString filterPortion(const QString &id);
 Filter parseFilter(const QString &input);
+
+ostream &operator<<(ostream &stream, const QString &string);
 
 QImage FilteredImageProvider::requestImage(
     const QString &id, QSize *size, const QSize &requestedSize)
@@ -22,13 +28,13 @@ QImage FilteredImageProvider::requestImage(
 
 QString imagePathPortion(const QString &id)
 {
-    QString url = id.section(';', 1);
+    QString url = id.section(';', 1, 1);
     return QUrl::fromUserInput(url).toLocalFile();
 }
 
 QString filterPortion(const QString &id)
 {
-    return id.section(';', 0);
+    return id.section(';', 0, 0);
 }
 
 Filter parseFilter(const QString &input)
@@ -38,9 +44,14 @@ Filter parseFilter(const QString &input)
 
     Filter::matrixT matrix{};
     for (QString el : fields[1].split(","))
-        matrix.append(el.toDouble());
+        matrix.append(el.toInt());
 
     int divisor = fields[2].toInt();
 
     return Filter{columns, matrix, divisor};
+}
+
+ostream &operator<<(ostream &stream, const QString &string) {
+    stream << string.toUtf8().data();
+    return stream;
 }

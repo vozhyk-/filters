@@ -56,7 +56,6 @@ ApplicationWindow {
         onAccepted: {
             var filter = getFilter()
 
-            console.log("Filter: " + filter)
             loadImage(makeFilteredUrl(filter))
         }
 
