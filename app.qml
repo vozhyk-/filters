@@ -28,18 +28,48 @@ ApplicationWindow {
     FileDialog {
         id: openDialog
         folder: shortcuts.home
-        onAccepted: loadImage(openDialog.fileUrls[0])
+        onAccepted: loadNewImage(openDialog.fileUrls[0])
     }
 
     FilterDialog {
         id: filterDialog
 
         onAccepted: {
-            loadImage(getFilteredUrl())
+            addFilter(getFilter())
+            loadFilteredImage()
         }
     }
 
+    property url originalImageUrl
+    originalImageUrl: ""
+
+    property variant filters
+    filters: []
+
+    function addFilter(filter) {
+        filters.push(filter);
+    }
+
+    function loadFilteredImage() {
+        loadImage(makeFilteredUrl())
+    }
+
+    function makeFilteredUrl() {
+        var serializedFilters = []
+        for (var i in filters) {
+            serializedFilters.push(filterDialog.serializeFilter(filters[i]))
+        }
+        var serializedFilterList = serializedFilters.join("/")
+
+        return "image://filtered/" + serializedFilterList + ";" + originalImageUrl
+    }
+
+    function loadNewImage(url) {
+        loadImage(originalImageUrl = url)
+    }
+
     function loadImage(url) {
+        console.log(url)
         image.source = url
     }
 

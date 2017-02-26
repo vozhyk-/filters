@@ -6,10 +6,6 @@ import QtQuick.Dialogs 1.2
 Dialog {
     id: filterDialog
 
-    function getFilteredUrl() {
-        return makeFilteredUrl(getFilter())
-    }
-
     function getFilter() {
         var matrix = []
 
@@ -39,11 +35,6 @@ Dialog {
         }
         divisorField.text = filter.divisor;
         offsetField.text = filter.offset;
-    }
-
-    function makeFilteredUrl(filter) {
-        return "image://filtered/" +
-            serializeFilter(filter) + ";" + image.source
     }
 
     function serializeFilter(filter) {

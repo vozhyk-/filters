@@ -8,6 +8,7 @@ using namespace std;
 
 QString imagePathPortion(const QString &id);
 QString filterPortion(const QString &id);
+vector<Filter> parseFilters(const QString &input);
 Filter parseFilter(const QString &input);
 
 ostream &operator<<(ostream &stream, const QString &string);
@@ -19,9 +20,10 @@ QImage FilteredImageProvider::requestImage(
     Q_UNUSED(requestedSize);
 
     QImage image{imagePathPortion(id)};
-    Filter filter = parseFilter(filterPortion(id));
+    vector<Filter> filters = parseFilters(filterPortion(id));
 
-    filter.apply(image);
+    for (auto filter: filters)
+        filter.apply(image);
 
     return image;
 }
@@ -35,6 +37,15 @@ QString imagePathPortion(const QString &id)
 QString filterPortion(const QString &id)
 {
     return id.section(';', 0, 0);
+}
+
+vector<Filter> parseFilters(const QString &input)
+{
+    QStringList inputs = input.split("/");
+    vector<Filter> result{};
+    transform(inputs.begin(), inputs.end(),
+              back_inserter(result), parseFilter);
+    return result;
 }
 
 Filter parseFilter(const QString &input)
