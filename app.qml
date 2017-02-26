@@ -59,11 +59,6 @@ ApplicationWindow {
             loadImage(makeFilteredUrl(filter))
         }
 
-        function makeFilteredUrl(filter) {
-            return "image://filtered/" +
-                JSON.stringify(filter) + ";" + image.source
-        }
-
         function parseFilter(grid) {
             var filter = []
 
@@ -79,6 +74,15 @@ ApplicationWindow {
             }
 
             return filter
+        }
+
+        function makeFilteredUrl(filter) {
+            return "image://filtered/" +
+                serializeFilter(filter) + ";" + image.source
+        }
+
+        function serializeFilter(filter) {
+            return "" + filter;
         }
 
         GridLayout {
