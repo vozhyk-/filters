@@ -82,7 +82,7 @@ ApplicationWindow {
         }
 
         function serializeFilter(filter) {
-            return "" + filter;
+            return filter[0].columns + ":" + filter;
         }
 
         GridLayout {
