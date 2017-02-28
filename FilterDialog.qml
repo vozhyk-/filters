@@ -62,6 +62,20 @@ Dialog {
         },
 
         {
+            text: "Gaussian Blur",
+            filter: {
+                rows: 3,
+                columns: 3,
+                matrix: [0, 1, 0,
+                         1, 4, 1,
+                         0, 1, 0],
+                anchor: [1, 1],
+                divisor: 8,
+                offset: 0
+            }
+        },
+
+        {
             text: "Sharpen",
             filter: {
                 rows: 3,
