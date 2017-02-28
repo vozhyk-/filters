@@ -4,6 +4,7 @@
 
 using namespace std;
 
+int clamp(int value);
 ostream &operator<<(ostream &stream, const QPoint &point);
 
 void Filter::apply(QImage &image)
@@ -52,11 +53,21 @@ QRgb Filter::colorAtPoint(const QImage &original, const QPoint &point)
         }
     }
 
-    resultR = resultR / divisor + offset;
-    resultG = resultG / divisor + offset;
-    resultB = resultB / divisor + offset;
+    resultR = clamp(resultR / divisor + offset);
+    resultG = clamp(resultG / divisor + offset);
+    resultB = clamp(resultB / divisor + offset);
 
     return qRgb(resultR, resultG, resultB);
+}
+
+int clamp(int value)
+{
+    if (value > 255)
+        return 255;
+    else if (value < 0)
+        return 0;
+    else
+        return value;
 }
 
 ostream &operator<<(ostream &stream, const QPoint &point) {
