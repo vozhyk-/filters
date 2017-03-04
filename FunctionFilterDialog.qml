@@ -19,57 +19,18 @@ Dialog {
             filter.offset
     }
 
-    property variant predefinedFilters
-    predefinedFilters: [
-        {
-            text: "Contrast +",
-            filter: {
-                slope: 1.3,
-                argOffset: -127,
-                offset: 127
-            }
-        },
-        {
-            text: "Contrast -",
-            filter: {
-                slope: 0.7,
-                argOffset: -127,
-                offset: 127
-            }
-        },
-
-        {
-            text: "Brightness +",
-            filter: {
-                slope: 1,
-                offset: 20
-            }
-        },
-        {
-            text: "Brightness -",
-            filter: {
-                slope: 1,
-                offset: -20
-            }
-        },
-
-        {
-            text: "Negation",
-            filter: {
-                slope: -1,
-                offset: 255
-            }
-        }
-    ]
+    PredefinedFunctionFilters {
+        id: predefined
+    }
 
     property variant filter
-    filter: predefinedFilters[0]
+    filter: predefined.filters[0]
 
     Column {
         anchors.fill: parent
 
         Repeater {
-            Component.onCompleted: model = dialog.predefinedFilters
+            Component.onCompleted: model = predefined.filters
 
             delegate: Button {
                 text: modelData.text
