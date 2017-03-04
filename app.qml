@@ -5,7 +5,7 @@ import QtQuick.Dialogs 1.2
 
 ApplicationWindow {
     visible: true
-    title: "Convolution Filters"
+    title: "Filters"
 
     menuBar: MenuBar {
         Menu {
@@ -15,7 +15,7 @@ ApplicationWindow {
 
         Menu {
             title: "&Edit"
-            MenuItem { action: applyFilterAction }
+            MenuItem { action: applyConvolutionFilterAction }
             MenuItem { action: undoAction }
             MenuItem { action: redoAction }
         }
@@ -30,10 +30,10 @@ ApplicationWindow {
     }
 
     Action {
-        id: applyFilterAction
-        text: "Apply &Filter..."
+        id: applyConvolutionFilterAction
+        text: "Apply &Convolution Filter..."
         shortcut: "Return"
-        onTriggered: filterDialog.visible = true
+        onTriggered: convolutionFilterDialog.visible = true
     }
 
     Action {
@@ -63,8 +63,8 @@ ApplicationWindow {
         onAccepted: loadNewImage(openDialog.fileUrls[0])
     }
 
-    FilterDialog {
-        id: filterDialog
+    ConvolutionFilterDialog {
+        id: convolutionFilterDialog
 
         onAccepted: addFilter(getFilter())
     }
@@ -109,7 +109,9 @@ ApplicationWindow {
 
         var serializedFilters = []
         for (var i in filters) {
-            serializedFilters.push(filterDialog.serializeFilter(filters[i]))
+            serializedFilters.push(
+                convolutionFilterDialog.serializeFilter(
+                    filters[i]))
         }
         var serializedFilterList = serializedFilters.join("/")
 
