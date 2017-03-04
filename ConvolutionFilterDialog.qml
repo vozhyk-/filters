@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 
 Dialog {
-    id: filterDialog
+    id: dialog
 
     function getFilter() {
         var matrix = []
@@ -166,12 +166,12 @@ Dialog {
                 Layout.columnSpan: 2
 
                 Component.onCompleted: {
-                    model = filterDialog.predefinedFilters
+                    model = dialog.predefinedFilters
 
-                    filterDialog.setFilter(model[0].filter)
+                    dialog.setFilter(model[0].filter)
                 }
 
-                onActivated: filterDialog.setFilter(model[index].filter)
+                onActivated: dialog.setFilter(model[index].filter)
             }
 
             Grid {
