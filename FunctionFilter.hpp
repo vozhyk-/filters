@@ -6,15 +6,19 @@
 class FunctionFilter : public Filter
 {
 public:
-    FunctionFilter(int slope, int offset) : slope{slope}, offset{offset}
+    FunctionFilter(double slope, int offset) : slope{slope}, offset{offset}
     {
     }
 
     void apply(QImage &image) const override;
 
 private:
-    int slope;
+    double slope;
     int offset;
+
+    void applyAtPoint(QImage &image, const QPoint &toProcess) const;
+    QRgb colorAtPoint(QImage &image, const QPoint &point) const;
+    unsigned char colorForChannel(unsigned char channel) const;
 };
 
 #endif // FUNCTION_FILTER_H

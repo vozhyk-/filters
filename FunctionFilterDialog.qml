@@ -23,30 +23,30 @@ Dialog {
         {
             text: "Contrast +",
             filter: {
-                slope: -1,
+                slope: 1.3,
                 offset: 0
             }
         },
         {
             text: "Contrast -",
             filter: {
-                slope: -1,
+                slope: 0.7,
                 offset: 0
             }
         },
 
         {
-            text: "Contrast +",
+            text: "Brightness +",
             filter: {
-                slope: -1,
-                offset: 0
+                slope: 1,
+                offset: 20
             }
         },
         {
-            text: "Contrast +",
+            text: "Brightness -",
             filter: {
-                slope: -1,
-                offset: 0
+                slope: 1,
+                offset: -20
             }
         },
 
@@ -54,7 +54,7 @@ Dialog {
             text: "Negation",
             filter: {
                 slope: -1,
-                offset: 0
+                offset: 255
             }
         }
     ]
