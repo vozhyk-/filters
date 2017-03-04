@@ -11,11 +11,9 @@ void ConvolutionFilter::apply(QImage &image) const
 {
     QImage original{image};
 
-    for (int y = 0; y < image.height(); y++) {
-        for (int x = 0; x < image.width(); x++) {
+    for (int y = 0; y < image.height(); y++)
+        for (int x = 0; x < image.width(); x++)
             applyAtPoint(original, image, QPoint{x, y});
-        }
-    }
 }
 
 void ConvolutionFilter::applyAtPoint(
@@ -54,21 +52,11 @@ QRgb ConvolutionFilter::colorAtPoint(
         }
     }
 
-    resultR = clamp(resultR / divisor + offset);
-    resultG = clamp(resultG / divisor + offset);
-    resultB = clamp(resultB / divisor + offset);
+    resultR = Filter::clamp(resultR / divisor + offset);
+    resultG = Filter::clamp(resultG / divisor + offset);
+    resultB = Filter::clamp(resultB / divisor + offset);
 
     return qRgb(resultR, resultG, resultB);
-}
-
-int clamp(int value)
-{
-    if (value > 255)
-        return 255;
-    else if (value < 0)
-        return 0;
-    else
-        return value;
 }
 
 ostream &operator<<(ostream &stream, const QPoint &point) {
