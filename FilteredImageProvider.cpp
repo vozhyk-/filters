@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "ConvolutionFilter.hpp"
+#include "FunctionFilter.hpp"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ QString filterPortion(const QString &id);
 FilterVector parseFilters(const QString &input);
 unique_ptr<Filter> parseFilter(const QString &input);
 unique_ptr<ConvolutionFilter> parseConvolutionFilter(const QString &input);
+unique_ptr<FunctionFilter> parseFunctionFilter(const QString &input);
 
 ostream &operator<<(ostream &stream, const QString &string);
 
@@ -59,6 +61,8 @@ unique_ptr<Filter> parseFilter(const QString &input)
 
     if (type == "convolution")
         return parseConvolutionFilter(rest);
+    else if (type == "function")
+        return parseFunctionFilter(rest);
     else
         throw logic_error{"Not implemented"};
 }
@@ -80,6 +84,16 @@ unique_ptr<ConvolutionFilter> parseConvolutionFilter(const QString &input)
 
     return make_unique<ConvolutionFilter>(
         columns, matrix, anchor, divisor, offset);
+}
+
+unique_ptr<FunctionFilter> parseFunctionFilter(const QString &input)
+{
+    QStringList fields = input.split(":");
+
+    int slope = fields[0].toInt();
+    int offset = fields[1].toInt();
+
+    return make_unique<FunctionFilter>(slope, offset);
 }
 
 ostream &operator<<(ostream &stream, const QString &string) {
