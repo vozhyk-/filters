@@ -1,10 +1,11 @@
 #ifndef CONVOLUTION_FILTER_HPP
 #define CONVOLUTION_FILTER_HPP
 
-#include <QVector>
-#include <QImage>
+#include "Filter.hpp"
 
-class ConvolutionFilter
+#include <QVector>
+
+class ConvolutionFilter : public Filter
 {
 public:
     using matrixT = QVector<int>;
@@ -16,7 +17,7 @@ public:
     {
     }
 
-    void apply(QImage &image);
+    void apply(QImage &image) const override;
 
 private:
     int columns;
@@ -25,15 +26,15 @@ private:
     int divisor;
     int offset;
 
-    QSize size() {
+    QSize size() const {
         return QSize{columns, matrix.length() / columns};
     }
 
-    int get(int x, int y) { return matrix[y * columns + x]; }
+    int get(int x, int y) const { return matrix[y * columns + x]; }
 
     void applyAtPoint(
-        const QImage &original, QImage &image, const QPoint &toProcess);
-    QRgb colorAtPoint(const QImage &original, const QPoint &point);
+        const QImage &original, QImage &image, const QPoint &toProcess) const;
+    QRgb colorAtPoint(const QImage &original, const QPoint &point) const;
 };
 
 #endif // CONVOLUTION_FILTER_HPP

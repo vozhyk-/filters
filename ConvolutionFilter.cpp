@@ -7,7 +7,7 @@ using namespace std;
 int clamp(int value);
 ostream &operator<<(ostream &stream, const QPoint &point);
 
-void ConvolutionFilter::apply(QImage &image)
+void ConvolutionFilter::apply(QImage &image) const
 {
     QImage original{image};
 
@@ -19,12 +19,13 @@ void ConvolutionFilter::apply(QImage &image)
 }
 
 void ConvolutionFilter::applyAtPoint(
-    const QImage &original, QImage &image, const QPoint &toProcess)
+    const QImage &original, QImage &image, const QPoint &toProcess) const
 {
     image.setPixel(toProcess, colorAtPoint(original, toProcess));
 }
 
-QRgb ConvolutionFilter::colorAtPoint(const QImage &original, const QPoint &point)
+QRgb ConvolutionFilter::colorAtPoint(
+    const QImage &original, const QPoint &point) const
 {
     QRect rect{point - anchor, size()};
 
