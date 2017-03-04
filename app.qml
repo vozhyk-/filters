@@ -37,6 +37,13 @@ ApplicationWindow {
     }
 
     Action {
+        id: applyFunctionFilterAction
+        text: "Apply &Function Filter..."
+        shortcut: "Shift+Return"
+        onTriggered: functionFilterDialog.visible = true
+    }
+
+    Action {
         id: undoAction
         text: "&Undo"
         shortcut: StandardKey.Undo
@@ -65,6 +72,12 @@ ApplicationWindow {
 
     ConvolutionFilterDialog {
         id: convolutionFilterDialog
+
+        onAccepted: addFilter(getFilter())
+    }
+
+    FunctionFilterDialog {
+        id: functionFilterDialog
 
         onAccepted: addFilter(getFilter())
     }
