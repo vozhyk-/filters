@@ -12,6 +12,7 @@ using FilterVector = vector<unique_ptr<Filter>>;
 QString imagePathPortion(const QString &id);
 QString filterPortion(const QString &id);
 FilterVector parseFilters(const QString &input);
+unique_ptr<Filter> parseFilter(const QString &input);
 unique_ptr<ConvolutionFilter> parseConvolutionFilter(const QString &input);
 
 ostream &operator<<(ostream &stream, const QString &string);
@@ -47,8 +48,19 @@ FilterVector parseFilters(const QString &input)
     QStringList inputs = input.split("/");
     FilterVector result{};
     transform(inputs.begin(), inputs.end(),
-              back_inserter(result), parseConvolutionFilter);
+              back_inserter(result), parseFilter);
     return result;
+}
+
+unique_ptr<Filter> parseFilter(const QString &input)
+{
+    QString type = input.section(':', 0, 0);
+    QString rest = input.section(':', 1);
+
+    if (type == "convolution")
+        return parseConvolutionFilter(rest);
+    else
+        throw logic_error{"Not implemented"};
 }
 
 unique_ptr<ConvolutionFilter> parseConvolutionFilter(const QString &input)

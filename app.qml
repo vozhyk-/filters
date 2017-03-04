@@ -109,9 +109,7 @@ ApplicationWindow {
 
         var serializedFilters = []
         for (var i in filters) {
-            serializedFilters.push(
-                convolutionFilterDialog.serializeFilter(
-                    filters[i]))
+            serializedFilters.push(filters[i].serialize())
         }
         var serializedFilterList = serializedFilters.join("/")
 

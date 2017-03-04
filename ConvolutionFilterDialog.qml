@@ -20,13 +20,15 @@ Dialog {
             }
         }
 
-        return {
+        var result = {
             columns: matrixGrid.columns,
             matrix: matrix,
             anchor: [1, 1],
             divisor: parseInt(divisorField.text),
             offset: parseInt(offsetField.text)
         }
+        result.serialize = serializeFilter.bind(null, result)
+        return result
     }
 
     function setFilter(filter) {
@@ -38,7 +40,8 @@ Dialog {
     }
 
     function serializeFilter(filter) {
-        return filter.columns + ":" +
+        return "convolution:" +
+            filter.columns + ":" +
             filter.matrix + ":" +
             filter.anchor + ":" +
             filter.divisor + ":" +
