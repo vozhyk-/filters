@@ -91,9 +91,10 @@ unique_ptr<FunctionFilter> parseFunctionFilter(const QString &input)
     QStringList fields = input.split(":");
 
     double slope = fields[0].toDouble();
-    int offset = fields[1].toInt();
+    int argOffset = fields[1].toInt();
+    int offset = fields[2].toInt();
 
-    return make_unique<FunctionFilter>(slope, offset);
+    return make_unique<FunctionFilter>(slope, argOffset, offset);
 }
 
 ostream &operator<<(ostream &stream, const QString &string) {

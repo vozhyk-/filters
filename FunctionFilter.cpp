@@ -26,5 +26,5 @@ QRgb FunctionFilter::colorAtPoint(QImage &image, const QPoint &point) const
 
 unsigned char FunctionFilter::colorForChannel(unsigned char channel) const
 {
-    return Filter::clamp(channel * slope + offset);
+    return Filter::clamp((channel + argOffset) * slope + offset);
 }

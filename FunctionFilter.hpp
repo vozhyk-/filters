@@ -6,7 +6,8 @@
 class FunctionFilter : public Filter
 {
 public:
-    FunctionFilter(double slope, int offset) : slope{slope}, offset{offset}
+    FunctionFilter(double slope, int argOffset, int offset) :
+        slope{slope}, argOffset{argOffset}, offset{offset}
     {
     }
 
@@ -14,6 +15,7 @@ public:
 
 private:
     double slope;
+    int argOffset;
     int offset;
 
     void applyAtPoint(QImage &image, const QPoint &toProcess) const;

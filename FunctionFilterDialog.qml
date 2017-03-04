@@ -15,6 +15,7 @@ Dialog {
     function serializeFilter(filter) {
         return "function:" +
             filter.slope + ":" +
+            (filter.argOffset || 0) + ":" +
             filter.offset
     }
 
@@ -24,14 +25,16 @@ Dialog {
             text: "Contrast +",
             filter: {
                 slope: 1.3,
-                offset: 0
+                argOffset: -127,
+                offset: 127
             }
         },
         {
             text: "Contrast -",
             filter: {
                 slope: 0.7,
-                offset: 0
+                argOffset: -127,
+                offset: 127
             }
         },
 
