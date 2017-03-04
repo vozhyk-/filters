@@ -1,15 +1,18 @@
 #include "FilteredImageProvider.hpp"
 
 #include <iostream>
+#include <memory>
 
 #include "ConvolutionFilter.hpp"
 
 using namespace std;
 
+using FilterVector = vector<unique_ptr<Filter>>;
+
 QString imagePathPortion(const QString &id);
 QString filterPortion(const QString &id);
-vector<ConvolutionFilter> parseFilters(const QString &input);
-ConvolutionFilter parseConvolutionFilter(const QString &input);
+FilterVector parseFilters(const QString &input);
+unique_ptr<ConvolutionFilter> parseConvolutionFilter(const QString &input);
 
 ostream &operator<<(ostream &stream, const QString &string);
 
@@ -20,10 +23,10 @@ QImage FilteredImageProvider::requestImage(
     Q_UNUSED(requestedSize);
 
     QImage image{imagePathPortion(id)};
-    vector<ConvolutionFilter> filters = parseFilters(filterPortion(id));
+    FilterVector filters = parseFilters(filterPortion(id));
 
-    for (auto filter: filters)
-        filter.apply(image);
+    for (auto &filter: filters)
+        filter->apply(image);
 
     return image;
 }
@@ -39,16 +42,16 @@ QString filterPortion(const QString &id)
     return id.section(';', 0, 0);
 }
 
-vector<ConvolutionFilter> parseFilters(const QString &input)
+FilterVector parseFilters(const QString &input)
 {
     QStringList inputs = input.split("/");
-    vector<ConvolutionFilter> result{};
+    FilterVector result{};
     transform(inputs.begin(), inputs.end(),
               back_inserter(result), parseConvolutionFilter);
     return result;
 }
 
-ConvolutionFilter parseConvolutionFilter(const QString &input)
+unique_ptr<ConvolutionFilter> parseConvolutionFilter(const QString &input)
 {
     QStringList fields = input.split(":");
     int columns = fields[0].toInt();
@@ -63,7 +66,8 @@ ConvolutionFilter parseConvolutionFilter(const QString &input)
     int divisor = fields[3].toInt();
     int offset = fields[4].toInt();
 
-    return ConvolutionFilter{columns, matrix, anchor, divisor, offset};
+    return make_unique<ConvolutionFilter>(
+        columns, matrix, anchor, divisor, offset);
 }
 
 ostream &operator<<(ostream &stream, const QString &string) {
