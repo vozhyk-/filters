@@ -1,4 +1,4 @@
-#include "Filter.hpp"
+#include "ConvolutionFilter.hpp"
 
 #include <iostream>
 
@@ -7,7 +7,7 @@ using namespace std;
 int clamp(int value);
 ostream &operator<<(ostream &stream, const QPoint &point);
 
-void Filter::apply(QImage &image)
+void ConvolutionFilter::apply(QImage &image)
 {
     QImage original{image};
 
@@ -18,13 +18,13 @@ void Filter::apply(QImage &image)
     }
 }
 
-void Filter::applyAtPoint(
+void ConvolutionFilter::applyAtPoint(
     const QImage &original, QImage &image, const QPoint &toProcess)
 {
     image.setPixel(toProcess, colorAtPoint(original, toProcess));
 }
 
-QRgb Filter::colorAtPoint(const QImage &original, const QPoint &point)
+QRgb ConvolutionFilter::colorAtPoint(const QImage &original, const QPoint &point)
 {
     QRect rect{point - anchor, size()};
 

@@ -1,15 +1,16 @@
-#ifndef FILTER_HPP
-#define FILTER_HPP
+#ifndef CONVOLUTION_FILTER_HPP
+#define CONVOLUTION_FILTER_HPP
 
 #include <QVector>
 #include <QImage>
 
-class Filter
+class ConvolutionFilter
 {
 public:
     using matrixT = QVector<int>;
 
-    Filter(int columns, matrixT matrix, QPoint anchor, int divisor, int offset) :
+    ConvolutionFilter(int columns, matrixT matrix,
+                      QPoint anchor, int divisor, int offset) :
         columns{columns}, matrix{matrix}, anchor{anchor},
         divisor{divisor}, offset{offset}
     {
@@ -35,4 +36,4 @@ private:
     QRgb colorAtPoint(const QImage &original, const QPoint &point);
 };
 
-#endif // FILTER_HPP
+#endif // CONVOLUTION_FILTER_HPP
