@@ -32,6 +32,7 @@ Dialog {
     }
 
     function setFilter(filter) {
+        matrixGrid.setSize(filter.columns, filter.rows)
         for (var i in filter.matrix) {
             matrixGrid.children[i].text = filter.matrix[i]
         }
@@ -70,6 +71,10 @@ Dialog {
             function fieldAt(x, y) {
                 return children[y * matrixGrid.rows + x]
             }
+
+            function setSize(columns, rows) {
+                matrixGrid.rows = rows
+                matrixGrid.columns = columns
             }
             
             Repeater {
