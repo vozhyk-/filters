@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 
@@ -83,6 +84,18 @@ Dialog {
                 TextField {
                     placeholderText: "0"
                     validator: IntValidator {}
+
+                    style: TextFieldStyle {
+                        background: Rectangle {
+                            border.color: isAnchor() ? "green": "gray"
+                            border.width: 1.5
+                        }
+                    }
+
+                    function isAnchor() {
+                        return position()[0] == anchor[0] &&
+                            position()[1] == anchor[1]
+                    }
 
                     function position() {
                         var x = index % matrixGrid.columns
