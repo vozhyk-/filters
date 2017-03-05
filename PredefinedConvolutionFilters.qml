@@ -91,6 +91,20 @@ QtObject {
                 divisor: 1,
                 offset: 127
             }
+        },
+
+        {
+            text: "Left shift",
+            filter: {
+                rows: 3,
+                columns: 3,
+                matrix: [0, 0, 0,
+                         0, 1, 0,
+                         0, 0, 0],
+                anchor: [0, 1],
+                divisor: 1,
+                offset: 0
+            }
         }
     ]
 }
