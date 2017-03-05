@@ -9,12 +9,12 @@ Dialog {
     function getFilter() {
         var matrix = []
 
-        for (var i = 0; i < matrixGrid.rows; i++) {
+        for (var y = 0; y < matrixGrid.rows; y++) {
             var matrixRow = []
             matrix.push(matrixRow)
 
-            for (var j = 0; j < matrixGrid.columns; j++) {
-                var field = matrixGrid.children[i * matrixGrid.rows + j]
+            for (var x = 0; x < matrixGrid.columns; x++) {
+                var field = matrixGrid.fieldAt(x, y)
                 var matrixCell = parseInt(field.text)
                 matrixRow.push(matrixCell)
             }
@@ -23,7 +23,7 @@ Dialog {
         var result = {
             columns: matrixGrid.columns,
             matrix: matrix,
-            anchor: [1, 1],
+            anchor: anchor,
             divisor: parseInt(divisorField.text),
             offset: parseInt(offsetField.text)
         }
@@ -35,8 +35,17 @@ Dialog {
         for (var i in filter.matrix) {
             matrixGrid.children[i].text = filter.matrix[i]
         }
-        divisorField.text = filter.divisor;
-        offsetField.text = filter.offset;
+        setAnchor(filter.anchor)
+        divisorField.text = filter.divisor
+        offsetField.text = filter.offset
+    }
+
+    property variant anchor
+    anchor: []
+
+    function setAnchor(anchor) {
+        dialog.anchor = anchor
+        console.log("Anchor: " + anchor)
     }
 
     function serializeFilter(filter) {
@@ -58,6 +67,11 @@ Dialog {
             rows: 3
             columns: 3
 
+            function fieldAt(x, y) {
+                return children[y * matrixGrid.rows + x]
+            }
+            }
+            
             Repeater {
                 model: matrixGrid.rows * matrixGrid.columns
 
@@ -65,8 +79,14 @@ Dialog {
                     placeholderText: "0"
                     validator: IntValidator {}
 
+                    function position() {
+                        var x = index % matrixGrid.columns
+                        var y = Math.floor(index / matrixGrid.rows)
+                        return [x, y]
+                    }
+                    
                     Keys.onSpacePressed: {
-                        console.log("TODO set anchor here")
+                        setAnchor(position())
                     }
                 }
             }
