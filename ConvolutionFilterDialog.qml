@@ -144,6 +144,27 @@ Dialog {
                     placeholderText: "0"
                     validator: IntValidator {}
                 }
+
+                Text {
+                    text: "Size: "
+                    Layout.rowSpan: 2
+                }
+
+                Text {
+                    text: "x: "
+                }
+                TextField {
+                    id: xSizeField
+                    validator: IntValidator {}
+                }
+
+                Text {
+                    text: "y: "
+                }
+                TextField {
+                    id: ySizeField
+                    validator: IntValidator {}
+                }
             }
         }
     }
