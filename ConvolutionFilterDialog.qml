@@ -7,6 +7,9 @@ import QtQuick.Dialogs 1.2
 Dialog {
     id: dialog
 
+    width: 500
+    height: 300
+
     function getFilter() {
         var matrix = []
 
@@ -33,7 +36,7 @@ Dialog {
     }
 
     function setFilter(filter) {
-        matrixGrid.setSize(filter.columns, filter.rows)
+        setFilterSize(filter)
         for (var i in filter.matrix) {
             matrixGrid.children[i].text = filter.matrix[i]
         }
@@ -42,8 +45,16 @@ Dialog {
         offsetField.text = filter.offset
     }
 
+    function setFilterSize(filter) {
+        filterWidth = filter.columns
+        filterHeight = filter.rows
+    }
+
     property variant anchor
     anchor: []
+
+    property int filterWidth: parseInt(widthField.text)
+    property int filterHeight: heightField.text
 
     function setAnchor(anchor) {
         dialog.anchor = anchor
@@ -66,8 +77,8 @@ Dialog {
     Row {
         GridLayout {
             id: matrixGrid
-            rows: 3
-            columns: 3
+            rows: filterHeight
+            columns: filterWidth
 
             function fieldAt(x, y) {
                 return children[y * matrixGrid.rows + x]
@@ -79,11 +90,13 @@ Dialog {
             }
             
             Repeater {
-                model: matrixGrid.rows * matrixGrid.columns
+                model: filterHeight * filterWidth
 
                 TextField {
                     placeholderText: "0"
                     validator: IntValidator {}
+
+                    implicitWidth: 30
 
                     style: TextFieldStyle {
                         background: Rectangle {
@@ -146,24 +159,31 @@ Dialog {
                 }
 
                 Text {
-                    text: "Size: "
-                    Layout.rowSpan: 2
+                    text: "Width: "
+                }
+                TextField {
+                    id: widthField
+                    validator: IntValidator {}
+                    text: filterWidth
+                }
+                Binding {
+                    target: dialog
+                    property: "filterWidth"
+                    value: parseInt(widthField.text)
                 }
 
                 Text {
-                    text: "x: "
+                    text: "Height: "
                 }
                 TextField {
-                    id: xSizeField
+                    id: heightField
                     validator: IntValidator {}
+                    text: filterHeight
                 }
-
-                Text {
-                    text: "y: "
-                }
-                TextField {
-                    id: ySizeField
-                    validator: IntValidator {}
+                Binding {
+                    target: dialog
+                    property: "filterHeight"
+                    value: parseInt(heightField.text)
                 }
             }
         }
