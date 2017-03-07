@@ -94,6 +94,20 @@ QtObject {
         },
 
         {
+            text: "East emboss",
+            filter: {
+                rows: 3,
+                columns: 3,
+                matrix: [-1, 0, 1,
+                         -1, 1, 1,
+                         -1, 0, 1],
+                anchor: [1, 1],
+                divisor: 1,
+                offset: 0
+            }
+        },
+
+        {
             text: "Left shift",
             filter: {
                 rows: 3,
