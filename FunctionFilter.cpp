@@ -3,7 +3,7 @@
 void FunctionFilter::apply(QImage &image) const
 {
     for (int y = 0; y < image.height(); y++)
-        for (int x = 0; x < image.height(); x++)
+        for (int x = 0; x < image.width(); x++)
             applyAtPoint(image, QPoint{x, y});
 }
 
