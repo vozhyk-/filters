@@ -5,6 +5,7 @@
 
 #include "ConvolutionFilter.hpp"
 #include "FunctionFilter.hpp"
+#include "MedianFilter.hpp"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ FilterVector parseFilters(const QString &input);
 unique_ptr<Filter> parseFilter(const QString &input);
 unique_ptr<ConvolutionFilter> parseConvolutionFilter(const QString &input);
 unique_ptr<FunctionFilter> parseFunctionFilter(const QString &input);
+unique_ptr<MedianFilter> parseMedianFilter(const QString &input);
 
 ostream &operator<<(ostream &stream, const QString &string);
 
@@ -63,6 +65,8 @@ unique_ptr<Filter> parseFilter(const QString &input)
         return parseConvolutionFilter(rest);
     else if (type == "function")
         return parseFunctionFilter(rest);
+    else if (type == "median")
+        return parseMedianFilter(rest);
     else
         throw logic_error{"Not implemented"};
 }
@@ -95,6 +99,12 @@ unique_ptr<FunctionFilter> parseFunctionFilter(const QString &input)
     int offset = fields[2].toInt();
 
     return make_unique<FunctionFilter>(slope, argOffset, offset);
+}
+
+unique_ptr<MedianFilter> parseMedianFilter(const QString &input)
+{
+    Q_UNUSED(input);
+    return make_unique<MedianFilter>();
 }
 
 ostream &operator<<(ostream &stream, const QString &string) {
