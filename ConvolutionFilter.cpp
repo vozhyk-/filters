@@ -38,12 +38,11 @@ QRgb ConvolutionFilter::colorAtPoint(
              x < rect.x() + rect.width();
              x++, filterX++) {
 
-            if (x < 0 || x >= original.width() ||
-                y < 0 || y >= original.height()) {
-                continue;
-            }
+            QPoint realPos{
+                Filter::clamp(x, 0, original.width()),
+                Filter::clamp(y, 0, original.height())};
 
-            QRgb rgb = original.pixel(x, y);
+            QRgb rgb = original.pixel(realPos);
             int multiplier = get(filterX, filterY);
 
             resultR += qRed(rgb) * multiplier;
