@@ -16,6 +16,7 @@ ApplicationWindow {
         Menu {
             title: "&Edit"
             MenuItem { action: applyConvolutionFilterAction }
+            MenuItem { action: applyFunctionFilterAction }
             MenuItem { action: undoAction }
             MenuItem { action: redoAction }
         }
@@ -34,6 +35,13 @@ ApplicationWindow {
         text: "Apply &Convolution Filter..."
         shortcut: "Return"
         onTriggered: convolutionFilterDialog.visible = true
+    }
+
+    Action {
+        id: applyMedianFilterAction
+        text: "Apply &Median Filter..."
+        shortcut: "Alt+Return"
+        onTriggered: medianFilterDialog.visible = true
     }
 
     Action {
@@ -72,6 +80,12 @@ ApplicationWindow {
 
     ConvolutionFilterDialog {
         id: convolutionFilterDialog
+
+        onAccepted: addFilter(getFilter())
+    }
+
+    MedianFilterDialog {
+        id: medianFilterDialog
 
         onAccepted: addFilter(getFilter())
     }
