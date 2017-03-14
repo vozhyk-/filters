@@ -41,6 +41,7 @@ ApplicationWindow {
             MenuItem { action: applyConvolutionFilterAction }
             MenuItem { action: applyFunctionFilterAction }
             MenuItem { action: applyMedianFilterAction }
+            MenuItem { action: applyRandomDitheringAction }
             MenuItem { action: undoAction }
             MenuItem { action: redoAction }
         }
@@ -73,6 +74,13 @@ ApplicationWindow {
         text: "Apply &Function Filter..."
         shortcut: "Shift+Return"
         onTriggered: functionFilterDialog.visible = true
+    }
+
+    Action {
+        id: applyRandomDitheringAction
+        text: "Apply &Random Dithering..."
+        shortcut: "D"
+        onTriggered: randomDitherDialog.visible = true
     }
 
     Action {
@@ -116,6 +124,12 @@ ApplicationWindow {
 
     FunctionFilterDialog {
         id: functionFilterDialog
+
+        onAccepted: addFilter(getFilter())
+    }
+
+    RandomDitherDialog {
+        id: randomDitherDialog
 
         onAccepted: addFilter(getFilter())
     }
