@@ -40,6 +40,7 @@ ApplicationWindow {
             title: "&Edit"
             MenuItem { action: applyConvolutionFilterAction }
             MenuItem { action: applyFunctionFilterAction }
+            MenuItem { action: applyMedianFilterAction }
             MenuItem { action: undoAction }
             MenuItem { action: redoAction }
         }
