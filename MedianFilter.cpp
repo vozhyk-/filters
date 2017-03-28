@@ -41,25 +41,6 @@ void MedianFilter::apply(QImage &image) const
             applyAtPoint(original, image, QPoint{x, y});
 }
 
-void makeMonochrome(QImage &image)
-{
-    for (int y = 0; y < image.height(); y++)
-        for (int x = 0; x < image.width(); x++)
-            image.setPixel(x, y, monochromePixel(image.pixel(x, y)));
-}
-
-QRgb monochromePixel(QRgb pixel)
-{
-    /*
-    int channel =
-        0.3 * qRed(pixel) +
-        0.58 * qGreen(pixel) +
-        0.12 * qBlue(pixel);
-    */
-    int channel = qGray(pixel);
-    return qRgb(channel, channel, channel);
-}
-
 void MedianFilter::applyAtPoint(
     const QImage &original, QImage &image, const QPoint &toProcess) const
 {

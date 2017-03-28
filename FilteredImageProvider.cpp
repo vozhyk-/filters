@@ -29,6 +29,7 @@
 #include "ConvolutionFilter.hpp"
 #include "FunctionFilter.hpp"
 #include "MedianFilter.hpp"
+#include "Dither.hpp"
 
 using namespace std;
 
@@ -90,6 +91,8 @@ unique_ptr<Filter> parseFilter(const QString &input)
         return parseFunctionFilter(rest);
     else if (type == "median")
         return parseMedianFilter(rest);
+    else if (type == "dither")
+        return Dither::parse(rest);
     else
         throw logic_error{"Not implemented"};
 }

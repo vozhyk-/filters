@@ -28,6 +28,6 @@ QtObject {
     property double threshold
 
     function serialize() {
-        return ["random_dither", levels, threshold].join(":")
+        return ["dither", levels, threshold].join(":")
     }
 }

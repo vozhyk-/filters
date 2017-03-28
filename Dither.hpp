@@ -21,52 +21,39 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef FILTER_H
-#define FILTER_H
+#ifndef DITHER_HPP
+#define DITHER_HPP
 
-#include <QImage>
+#include "Filter.hpp"
 
-class Filter
+#include <memory>
+
+class Dither : public Filter
 {
 public:
-    virtual void apply(QImage &image) const = 0;
-
-    static int clamp(int channel)
+    Dither(int numLevels) :
+        numLevels{numLevels}, levels{generateLevels()}
     {
-        return clamp(channel, 0, 256);
+    }
+ 
+    void apply(QImage &image) const override;
+
+    static std::unique_ptr<Dither> parse(const QString &input) {
+        QStringList fields = input.split(":");
+
+        int numLevels = fields[0].toInt();
+
+        return std::make_unique<Dither>(numLevels);
     }
 
-    //! clamp inside the [start, end) range:
-    //! if value == end, return end - 1
-    static int clamp(int value, int start, int end)
-    {
-        if (value >= end)
-            return end - 1;
-        else if (value < start)
-            return start;
-        else
-            return value;
-    }
+private:
+    int numLevels;
 
+    using levelsVector = std::vector<unsigned char>;
 
-    static QRgb monochromePixel(QRgb pixel)
-    {
-        /*
-        int channel =
-            0.3 * qRed(pixel) +
-            0.58 * qGreen(pixel) +
-            0.12 * qBlue(pixel);
-        */
-        int channel = qGray(pixel);
-        return qRgb(channel, channel, channel);
-    }
-    
-    static void makeMonochrome(QImage &image)
-    {
-        for (int y = 0; y < image.height(); y++)
-            for (int x = 0; x < image.width(); x++)
-                image.setPixel(x, y, monochromePixel(image.pixel(x, y)));
-    }
+    levelsVector levels;
+
+    levelsVector generateLevels();
 };
 
-#endif // FILTER_H
+#endif // DITHER_HPP
