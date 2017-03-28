@@ -33,6 +33,7 @@ using namespace std;
 
 template <typename T> std::ostream &operator<<(
     std::ostream& out, const std::vector<T>& v);
+QRgb greyRgb(unsigned char level);
 
 
 Dither::levelsVector Dither::generateLevels()
@@ -82,5 +83,26 @@ Dither::levelsVector Dither::generateLevels()
 void Dither::apply(QImage &image) const
 {
     Filter::makeMonochrome(image);
-    
+
+    for (int y = 0; y < image.height(); y++)
+        for (int x = 0; x < image.width(); x++)
+            applyAtPoint(image, QPoint{x, y});
+}
+
+
+void Dither::applyAtPoint(
+    QImage &image, const QPoint &toProcess) const
+{
+    image.setPixel(toProcess, greyRgb(levelAtPoint(image, toProcess)));
+}
+
+QRgb greyRgb(unsigned char level)
+{
+    return qRgb(level, level, level);
+}
+
+unsigned char Dither::levelAtPoint(
+    const QImage &image, const QPoint &point) const
+{
+    return image.pixel(point);
 }

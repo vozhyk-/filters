@@ -54,6 +54,11 @@ private:
     levelsVector levels;
 
     levelsVector generateLevels();
+
+    void applyAtPoint(
+        QImage &image, const QPoint &toProcess) const;
+    unsigned char levelAtPoint(
+        const QImage &image, const QPoint &point) const;
 };
 
 #endif // DITHER_HPP
