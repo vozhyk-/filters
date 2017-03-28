@@ -23,12 +23,6 @@
 
 #include "Dither.hpp"
 
-#include <random>
-#include <algorithm>
-#include <iterator>
-#include <iostream>
-#include <functional>
-
 using namespace std;
 
 template <typename T> std::ostream &operator<<(
@@ -65,21 +59,6 @@ template <typename T> std::ostream &operator<<(
     return out;
 }
 
-/*
-Dither::levelsVector Dither::generateLevels()
-{
-    random_device device{};
-    mt19937 mersenne_engine(device());
-    uniform_int_distribution<int> dist(0, 255);
-
-    auto gen = std::bind(dist, mersenne_engine);
-    Dither::levelsVector result(numLevels);
-    generate(begin(result), end(result), gen);
-
-    return result;
-}
-*/
-
 void Dither::apply(QImage &image) const
 {
     Filter::makeMonochrome(image);
@@ -104,5 +83,31 @@ QRgb greyRgb(unsigned char level)
 unsigned char Dither::levelAtPoint(
     const QImage &image, const QPoint &point) const
 {
-    return image.pixel(point);
+    return threshold(qRed(image.pixel(point)));
+}
+
+unsigned char Dither::threshold(unsigned char level) const
+{
+    unsigned char lower = lowerLevel(level);
+    unsigned char higher = higherLevel(level);
+
+    double threshold = random_threshold();
+    return double(level - lower) / (higher - lower) > threshold ?
+        higher : lower;
+}
+
+unsigned char Dither::higherLevel(unsigned char level) const
+{
+    auto found = upper_bound(levels.begin(), levels.end(), level);
+    return found != levels.end() ?
+        *found :
+        levels.back();
+}
+
+unsigned char Dither::lowerLevel(unsigned char level) const
+{
+    auto found = lower_bound(levels.rbegin(), levels.rend(), level);
+    return found != levels.rend() ?
+        *found :
+        levels.front();
 }

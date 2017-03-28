@@ -27,6 +27,11 @@
 #include "Filter.hpp"
 
 #include <memory>
+#include <random>
+#include <algorithm>
+#include <iterator>
+#include <iostream>
+#include <functional>
 
 class Dither : public Filter
 {
@@ -53,12 +58,20 @@ private:
 
     levelsVector levels;
 
+    std::random_device device{};
+    std::mt19937 engine{device()};
+    std::uniform_real_distribution<double> distribution{};
+    std::function<double()> random_threshold = std::bind(distribution, engine);
+
     levelsVector generateLevels();
 
     void applyAtPoint(
         QImage &image, const QPoint &toProcess) const;
     unsigned char levelAtPoint(
         const QImage &image, const QPoint &point) const;
+    unsigned char threshold(unsigned char level) const;
+    unsigned char higherLevel(unsigned char level) const;
+    unsigned char lowerLevel(unsigned char level) const;
 };
 
 #endif // DITHER_HPP
