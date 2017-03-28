@@ -40,14 +40,15 @@ Dither::levelsVector Dither::generateLevels()
     int maxLevel = 255;
     double d = maxLevel / (numLevels - 1);
 
-    cout << numLevels << " " << d << endl;
+    cout << "Number of levels: " << numLevels
+         << ", step: " << d << endl;
     
     Dither::levelsVector result{};
     result.reserve(numLevels);
     for (int i = 0; i < numLevels; i++)
         result.push_back(d * i); // TODO Fix numLevels == 3
 
-    cout << result << endl;
+    cout << "Levels: " << result << endl;
     return result;
 }
 
