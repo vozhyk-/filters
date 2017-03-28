@@ -35,12 +35,10 @@ Dialog {
 
     property RandomDither filter: RandomDither {
         levels: parseInt(levelsField.text) || defaultFilter.levels
-        threshold: parseFloat(thresholdField.text) || defaultFilter.threshold
     }
 
     property RandomDither defaultFilter: RandomDither {
         levels: 2
-        threshold: 0.9
     }
 
     Grid {
@@ -53,18 +51,7 @@ Dialog {
             id: levelsField
             placeholderText: defaultFilter.levels
             validator: IntValidator {
-                // TODO powers of 2
-            }
-        }
-
-        Text {
-            text: "Threshold: "
-        }
-        TextField {
-            id: thresholdField
-            placeholderText: defaultFilter.threshold
-            validator: DoubleValidator {
-                // TODO 0 to 1
+                // TODO at least 2
             }
         }
     }

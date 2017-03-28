@@ -25,9 +25,8 @@ import QtQml 2.2
 
 QtObject {
     property int levels
-    property double threshold
 
     function serialize() {
-        return ["dither", levels, threshold].join(":")
+        return ["dither", levels].join(":")
     }
 }
