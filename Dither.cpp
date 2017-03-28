@@ -23,6 +23,8 @@
 
 #include "Dither.hpp"
 
+#include <cassert>
+
 using namespace std;
 
 template <typename T> std::ostream &operator<<(
@@ -88,26 +90,23 @@ unsigned char Dither::levelAtPoint(
 
 unsigned char Dither::threshold(unsigned char level) const
 {
-    unsigned char lower = lowerLevel(level);
-    unsigned char higher = higherLevel(level);
+    unsigned char lower, higher;
+    tie(lower, higher) = neighbors(level);
 
     double threshold = random_threshold();
     return double(level - lower) / (higher - lower) > threshold ?
         higher : lower;
 }
 
-unsigned char Dither::higherLevel(unsigned char level) const
+pair<unsigned char, unsigned char> Dither::neighbors(
+    unsigned char level) const
 {
-    auto found = upper_bound(levels.begin(), levels.end(), level);
-    return found != levels.end() ?
-        *found :
-        levels.back();
-}
+    auto higher = upper_bound(levels.begin(), levels.end(), level);
+    if (higher == levels.end())
+        --higher;
 
-unsigned char Dither::lowerLevel(unsigned char level) const
-{
-    auto found = lower_bound(levels.rbegin(), levels.rend(), level);
-    return found != levels.rend() ?
-        *found :
-        levels.front();
+    auto lower = higher - 1;
+    assert(lower >= levels.begin());
+
+    return make_pair(*lower, *higher);
 }

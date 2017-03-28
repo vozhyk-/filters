@@ -70,8 +70,8 @@ private:
     unsigned char levelAtPoint(
         const QImage &image, const QPoint &point) const;
     unsigned char threshold(unsigned char level) const;
-    unsigned char higherLevel(unsigned char level) const;
-    unsigned char lowerLevel(unsigned char level) const;
+    std::pair<unsigned char, unsigned char> neighbors(
+        unsigned char level) const;
 };
 
 #endif // DITHER_HPP
