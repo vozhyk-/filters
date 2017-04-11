@@ -39,11 +39,26 @@ static const std::vector<Channel> allChannels{
     Channel::Blue};
 
 
+unsigned char getChannel(Channel ch, QRgb color);
+void setChannel(Channel ch, QRgb &dest, QRgb source);
+
+
 void ColorTree::splitInto(int numColors)
 {
-    // 1. Find a bucket with the highest range of a channel
-    // 2. Sort it and split into 2
-    // 3. Repeat until numBuckets == numColors
+    while (numBuckets < numColors) {
+        // 1. Find a bucket with the highest range of a channel
+        Channel ch;
+        shared_ptr<Bucket> bucket;
+        tie(ch, bucket) = findWidestBucket();
+
+        // 2. Sort it
+        sort(bucket->pixels.begin(), bucket->pixels.end(),
+             [=](QRgb first, QRgb second) {
+                 return getChannel(ch, first) < getChannel(ch, second);
+             });
+
+        // 3. Split it into 2
+    }
 }
 
 pair<Channel, shared_ptr<Bucket>> ColorTree::findWidestBucket() const
@@ -82,9 +97,6 @@ ColorTuple operator+(ColorTuple first, ColorTuple second)
         get<1>(first) + get<1>(second),
         get<2>(first) + get<2>(second)};
 }
-
-unsigned char getChannel(Channel ch, QRgb color);
-void setChannel(Channel ch, QRgb &dest, QRgb source);
 
 ColorRange Bucket::getRange(std::vector<QRgb> pixels)
 {

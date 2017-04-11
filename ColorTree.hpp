@@ -37,7 +37,7 @@ public:
     };
 
     ColorTree(std::vector<QRgb> allPixels)
-        : root{std::make_shared<Bucket>(allPixels)}
+        : root{std::make_shared<Bucket>(allPixels)}, numBuckets{1}
     {
     }
 
@@ -75,7 +75,7 @@ public:
     std::shared_ptr<Bucket> root;
 
 private:
-    int numBuckets() const;
+    int numBuckets;
     std::pair<Channel, std::shared_ptr<Bucket>> findWidestBucket() const;
 };
 
