@@ -23,6 +23,8 @@
 
 #include "ColorTree.hpp"
 
+#include <iostream>
+
 using namespace std;
 
 
@@ -33,7 +35,7 @@ void ColorTree::splitInto(int numColors)
 using ColorTuple = tuple<long long, long long, long long>;
 
 ColorTuple operator+(ColorTuple first, ColorTuple second);
-void operator+=(ColorTuple first, ColorTuple second);
+ColorTuple &operator+=(ColorTuple &first, const ColorTuple &second);
 
 QRgb ColorTree::Bucket::average(vector<QRgb> pixels)
 {
@@ -49,9 +51,10 @@ QRgb ColorTree::Bucket::average(vector<QRgb> pixels)
         get<2>(sum) / n);
 }
 
-void operator+=(ColorTuple first, ColorTuple second)
+ColorTuple &operator+=(ColorTuple &first, const ColorTuple &second)
 {
     first = first + second;
+    return first;
 }
 
 ColorTuple operator+(ColorTuple first, ColorTuple second)
