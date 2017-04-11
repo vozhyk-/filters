@@ -32,7 +32,10 @@ void ColorTree::splitInto(int numColors)
 {
 }
 
-using ColorTuple = tuple<long long, long long, long long>;
+using ColorTuple = tuple<
+    unsigned long long,
+    unsigned long long,
+    unsigned long long>;
 
 ColorTuple operator+(ColorTuple first, ColorTuple second);
 ColorTuple &operator+=(ColorTuple &first, const ColorTuple &second);
