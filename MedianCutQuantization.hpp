@@ -25,6 +25,7 @@
 #define MEDIAN_CUT_QUANTIZATION_HPP
 
 #include "Filter.hpp"
+#include "ColorTree.hpp"
 
 #include <memory>
 #include <random>
@@ -37,7 +38,7 @@ class MedianCutQuantization : public Filter
 {
 public:
     MedianCutQuantization(int numColors) :
-        numColors{numColors}, colors{generateColors()}
+        numColors{numColors}
     {
     }
  
@@ -54,23 +55,15 @@ public:
 private:
     int numColors;
 
-    using colorsVector = std::vector<unsigned char>;
+    ColorTree colors;
 
-    colorsVector colors;
-
-    std::random_device device{};
-    std::mt19937 engine{device()};
-    std::uniform_real_distribution<double> distribution{};
-    std::function<double()> random_threshold = std::bind(distribution, engine);
-
-    colorsVector generateColors();
+    ColorTree generateColors();
 
     void applyAtPoint(
         QImage &image, const QPoint &toProcess) const;
     QRgb colorAtPoint(
         const QImage &image, const QPoint &point) const;
     QRgb threshold(QRgb color) const;
-    std::pair<QRgb, QRgb> neighbors(QRgb color) const;
 };
 
 #endif // MEDIAN_CUT_QUANTIZATION_HPP

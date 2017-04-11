@@ -21,42 +21,12 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "MedianCutQuantization.hpp"
-#include "ColorTree.hpp"
+#ifndef COLOR_TREE_HPP
+#define COLOR_TREE_HPP
 
-#include <cassert>
-
-using namespace std;
-
-
-ColorTree MedianCutQuantization::generateColors()
+class ColorTree
 {
-    ColorTree result{};
+public:
+};
 
-    return result;
-}
-
-void MedianCutQuantization::apply(QImage &image) const
-{
-    for (int y = 0; y < image.height(); y++)
-        for (int x = 0; x < image.width(); x++)
-            applyAtPoint(image, QPoint{x, y});
-}
-
-
-void MedianCutQuantization::applyAtPoint(
-    QImage &image, const QPoint &toProcess) const
-{
-    image.setPixel(toProcess, colorAtPoint(image, toProcess));
-}
-
-QRgb MedianCutQuantization::colorAtPoint(
-    const QImage &image, const QPoint &point) const
-{
-    return threshold(image.pixel(point));
-}
-
-QRgb MedianCutQuantization::threshold(QRgb color) const
-{
-    return color;
-}
+#endif // COLOR_TREE_HPP
