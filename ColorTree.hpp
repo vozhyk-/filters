@@ -25,6 +25,7 @@
 #define COLOR_TREE_HPP
 
 #include <vector>
+#include <memory>
 
 #include <QImage>
 
@@ -35,7 +36,8 @@ public:
         Red, Green, Blue
     };
 
-    ColorTree(std::vector<QRgb> allPixels) : root{allPixels}
+    ColorTree(std::vector<QRgb> allPixels)
+        : root{std::make_shared<Bucket>(allPixels)}
     {
     }
 
@@ -56,6 +58,9 @@ public:
 
         void splitAtMedian(Channel ch);
 
+        std::shared_ptr<Bucket> left{nullptr};
+        std::shared_ptr<Bucket> right{nullptr};
+
         std::vector<QRgb> pixels;
         QRgb resultingColor;
         ColorRange range;
@@ -67,11 +72,11 @@ public:
 
     void splitInto(int numColors);
 
-    Bucket root;
+    std::shared_ptr<Bucket> root;
 
 private:
     int numBuckets() const;
-    std::pair<Channel, Bucket> findWidestBucket() const;
+    std::pair<Channel, std::shared_ptr<Bucket>> findWidestBucket() const;
 };
 
 #endif // COLOR_TREE_HPP

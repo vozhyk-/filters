@@ -46,7 +46,7 @@ void ColorTree::splitInto(int numColors)
     // 3. Repeat until numBuckets == numColors
 }
 
-pair<Channel, Bucket> ColorTree::findWidestBucket() const
+pair<Channel, shared_ptr<Bucket>> ColorTree::findWidestBucket() const
 {
     return make_pair(Channel::Red, root);
 }

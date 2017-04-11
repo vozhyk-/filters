@@ -72,5 +72,5 @@ QRgb MedianCutQuantization::colorAtPoint(
 
 QRgb MedianCutQuantization::threshold(const ColorTree &colors, QRgb color) const
 {
-    return colors.root.resultingColor;
+    return colors.root->resultingColor;
 }
