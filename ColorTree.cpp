@@ -27,20 +27,35 @@
 
 using namespace std;
 
+using Channel = ColorTree::Channel;
+using Bucket = ColorTree::Bucket;
+using ColorTuple = ColorTree::Bucket::ColorTuple;
+using ColorRange = ColorTree::Bucket::ColorRange;
+
+
+static const std::vector<Channel> allChannels{
+    Channel::Red,
+    Channel::Green,
+    Channel::Blue};
+
 
 void ColorTree::splitInto(int numColors)
 {
+    // 1. Find a bucket with the highest range of a channel
+    // 2. Sort it and split into 2
+    // 3. Repeat until numBuckets == numColors
 }
 
-using ColorTuple = tuple<
-    unsigned long long,
-    unsigned long long,
-    unsigned long long>;
+pair<Channel, Bucket> ColorTree::findWidestBucket() const
+{
+    return make_pair(Channel::Red, root);
+}
+
 
 ColorTuple operator+(ColorTuple first, ColorTuple second);
 ColorTuple &operator+=(ColorTuple &first, const ColorTuple &second);
 
-QRgb ColorTree::Bucket::average(vector<QRgb> pixels)
+QRgb Bucket::average(vector<QRgb> pixels)
 {
     ColorTuple sum;
     auto n = pixels.size();
@@ -66,4 +81,55 @@ ColorTuple operator+(ColorTuple first, ColorTuple second)
         get<0>(first) + get<0>(second),
         get<1>(first) + get<1>(second),
         get<2>(first) + get<2>(second)};
+}
+
+unsigned char getChannel(Channel ch, QRgb color);
+void setChannel(Channel ch, QRgb &dest, QRgb source);
+
+ColorRange Bucket::getRange(std::vector<QRgb> pixels)
+{
+    QRgb min = qRgb(255, 255, 255);
+    QRgb max = qRgb(0, 0, 0);
+    
+    for (auto i: pixels) {
+        for (auto ch: allChannels) {
+            if (getChannel(ch, i) < getChannel(ch, min))
+                setChannel(ch, min, i);
+            if (getChannel(ch, i) > getChannel(ch, max))
+                setChannel(ch, max, i);
+        }
+    }
+
+    return ColorRange{min, max};
+}
+
+unsigned char getChannel(Channel ch, QRgb color)
+{
+    switch (ch) {
+    case Channel::Red:
+        return qRed(color);
+    case Channel::Green:
+        return qGreen(color);
+    case Channel::Blue:
+        return qBlue(color);
+    default:
+        throw new invalid_argument("Invalid channel");
+    }
+}
+
+void setChannel(Channel ch, QRgb &dest, QRgb source)
+{
+    switch (ch) {
+    case Channel::Red:
+        dest = qRgb(qRed(source), qGreen(dest), qBlue(dest));
+        break;
+    case Channel::Green:
+        dest = qRgb(qRed(dest), qGreen(source), qBlue(dest));
+        break;
+    case Channel::Blue:
+        dest = qRgb(qRed(dest), qGreen(dest), qBlue(source));
+        break;
+    default:
+        throw new invalid_argument("Invalid channel");
+    }
 }

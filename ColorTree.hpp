@@ -30,12 +30,11 @@
 
 class ColorTree
 {
-private:
+public:
     enum class Channel {
         Red, Green, Blue
     };
 
-public:
     ColorTree(std::vector<QRgb> allPixels) : root{allPixels}
     {
     }
@@ -43,8 +42,15 @@ public:
     class Bucket
     {
     public:
+        using ColorTuple = std::tuple<
+            unsigned long long,
+            unsigned long long,
+            unsigned long long>;
+        using ColorRange = std::pair<QRgb, QRgb>;
+
         Bucket(std::vector<QRgb> pixels)
-            : pixels{pixels}, resultingColor{average(pixels)}
+            : pixels{pixels}, resultingColor{average(pixels)},
+              range{getRange(pixels)}
         {
         }
 
@@ -52,9 +58,11 @@ public:
 
         std::vector<QRgb> pixels;
         QRgb resultingColor;
+        ColorRange range;
 
-    private:
+    private:    
         static QRgb average(std::vector<QRgb> pixels);
+        static ColorRange getRange(std::vector<QRgb> pixels);
     };
 
     void splitInto(int numColors);
