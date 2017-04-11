@@ -26,6 +26,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace std::experimental;
 
 using Channel = ColorTree::Channel;
 using Bucket = ColorTree::Bucket;
@@ -63,7 +64,18 @@ void ColorTree::splitInto(int numColors)
 
 pair<Channel, shared_ptr<Bucket>> ColorTree::findWidestBucket() const
 {
+    // TODO Implement
     return make_pair(Channel::Red, root);
+}
+
+bool Bucket::contains(QRgb color)
+{
+    for (auto ch: allChannels)
+        if (getChannel(ch, color) < getChannel(ch, range.first) ||
+            getChannel(ch, color) > getChannel(ch, range.second))
+            return false;
+
+    return true;
 }
 
 

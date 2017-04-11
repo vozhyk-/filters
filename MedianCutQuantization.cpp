@@ -24,9 +24,10 @@
 #include "MedianCutQuantization.hpp"
 #include "ColorTree.hpp"
 
-#include <cassert>
+#include <experimental/optional>
 
 using namespace std;
+using namespace std::experimental;
 
 
 vector<QRgb> pixels(const QImage &image);
@@ -59,18 +60,28 @@ void MedianCutQuantization::apply(QImage &image) const
 }
 
 void MedianCutQuantization::applyAtPoint(
-    QImage &image, const ColorTree &colors, const QPoint &toProcess) const
+    QImage &image, ColorTree &colors, const QPoint &toProcess) const
 {
     image.setPixel(toProcess, colorAtPoint(image, colors, toProcess));
 }
 
 QRgb MedianCutQuantization::colorAtPoint(
-    const QImage &image, const ColorTree &colors, const QPoint &point) const
+    const QImage &image, ColorTree &colors, const QPoint &point) const
 {
     return threshold(colors, image.pixel(point));
 }
 
-QRgb MedianCutQuantization::threshold(const ColorTree &colors, QRgb color) const
+QRgb MedianCutQuantization::threshold(ColorTree &colors, QRgb color) const
 {
-    return colors.root->resultingColor;
+    optional<QRgb> result = colors.walkInOrder<QRgb>(
+        colors.root,
+        [=](shared_ptr<ColorTree::Bucket> bucket) {
+            // if color is in range
+            if (bucket->contains(color))
+                return make_optional(bucket->resultingColor);
+            else
+                return optional<QRgb>();
+        });
+
+    return *result;
 }

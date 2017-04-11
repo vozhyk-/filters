@@ -26,6 +26,7 @@
 
 #include <vector>
 #include <memory>
+#include <experimental/optional>
 
 #include <QImage>
 
@@ -58,6 +59,8 @@ public:
 
         void splitAtMedian(Channel ch);
 
+        bool contains(QRgb color);
+
         std::shared_ptr<Bucket> left{nullptr};
         std::shared_ptr<Bucket> right{nullptr};
 
@@ -69,6 +72,33 @@ public:
         static QRgb average(std::vector<QRgb> pixels);
         static ColorRange getRange(std::vector<QRgb> pixels);
     };
+
+    template<typename T>
+    using optional = std::experimental::optional<T>;
+
+    template<typename T>
+    optional<T> walkInOrder(
+        std::shared_ptr<Bucket> bucket,
+        std::function<optional<T> (std::shared_ptr<Bucket> bucket)> fun)
+    {
+        if (bucket->left) {
+            auto result = walkInOrder(bucket->left, fun);
+            if (result)
+                return result;
+        }
+
+        auto result = fun(bucket);
+        if (result)
+            return result;
+
+        if (bucket->right) {
+            auto result = walkInOrder(bucket->right, fun);
+            if (result)
+                return result;
+        }
+
+        return optional<T>();
+    }
 
     void splitInto(int numColors);
 

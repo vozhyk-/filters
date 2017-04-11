@@ -58,10 +58,10 @@ private:
     ColorTree generateColors(const QImage &image) const;
 
     void applyAtPoint(
-        QImage &image, const ColorTree &colors, const QPoint &toProcess) const;
+        QImage &image, ColorTree &colors, const QPoint &toProcess) const;
     QRgb colorAtPoint(
-        const QImage &image, const ColorTree &colors, const QPoint &point) const;
-    QRgb threshold(const ColorTree &colors, QRgb color) const;
+        const QImage &image, ColorTree &colors, const QPoint &point) const;
+    QRgb threshold(ColorTree &colors, QRgb color) const;
 };
 
 #endif // MEDIAN_CUT_QUANTIZATION_HPP
