@@ -30,6 +30,7 @@
 #include "FunctionFilter.hpp"
 #include "MedianFilter.hpp"
 #include "Dither.hpp"
+#include "MedianCutQuantization.hpp"
 
 using namespace std;
 
@@ -93,6 +94,8 @@ unique_ptr<Filter> parseFilter(const QString &input)
         return parseMedianFilter(rest);
     else if (type == "dither")
         return Dither::parse(rest);
+    else if (type == "median-cut-quantization")
+        return MedianCutQuantization::parse(rest);
     else
         throw logic_error{"Not implemented"};
 }

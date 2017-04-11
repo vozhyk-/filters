@@ -84,6 +84,13 @@ ApplicationWindow {
     }
 
     Action {
+        id: applyMedianCutQuantizationAction
+        text: "Apply Median Cut &Quantization..."
+        shortcut: "M"
+        onTriggered: medianCutQuantizationDialog.visible = true
+    }
+
+    Action {
         id: undoAction
         text: "&Undo"
         shortcut: StandardKey.Undo
@@ -134,6 +141,12 @@ ApplicationWindow {
         onAccepted: addFilter(getFilter())
     }
 
+    MedianCutQuantizationDialog {
+        id: medianCutQuantizationDialog
+
+        onAccepted: addFilter(getFilter())
+    }
+
     property url originalImageUrl
 
     property variant filters
@@ -180,6 +193,9 @@ ApplicationWindow {
 
         return "image://filtered/" + serializedFilterList + ";" + originalImageUrl
     }
+
+    Component.onCompleted: loadNewImage(
+        "file:///home/vozhyk/images/photos/android/DSC_0055.JPG")
 
     function loadNewImage(url) {
         loadImage(originalImageUrl = url)
