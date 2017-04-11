@@ -55,9 +55,7 @@ public:
 private:
     int numColors;
 
-    ColorTree colors;
-
-    ColorTree generateColors();
+    ColorTree generateColors(const QImage &image) const;
 
     void applyAtPoint(
         QImage &image, const QPoint &toProcess) const;

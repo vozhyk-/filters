@@ -21,3 +21,43 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include "ColorTree.hpp"
+
+using namespace std;
+
+
+void ColorTree::splitInto(int numColors)
+{
+}
+
+using ColorTuple = tuple<long long, long long, long long>;
+
+ColorTuple operator+(ColorTuple first, ColorTuple second);
+void operator+=(ColorTuple first, ColorTuple second);
+
+QRgb ColorTree::Bucket::average(vector<QRgb> pixels)
+{
+    ColorTuple sum;
+    auto n = pixels.size();
+
+    for (auto i: pixels)
+        sum += ColorTuple(qRed(i), qBlue(i), qGreen(i));
+
+    return qRgb(
+        get<0>(sum) / n,
+        get<1>(sum) / n,
+        get<2>(sum) / n);
+}
+
+void operator+=(ColorTuple first, ColorTuple second)
+{
+    first = first + second;
+}
+
+ColorTuple operator+(ColorTuple first, ColorTuple second)
+{
+    return ColorTuple{
+        get<0>(first) + get<0>(second),
+        get<1>(first) + get<1>(second),
+        get<2>(first) + get<2>(second)};
+}

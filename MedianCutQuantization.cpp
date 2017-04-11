@@ -29,20 +29,34 @@
 using namespace std;
 
 
-ColorTree MedianCutQuantization::generateColors()
+vector<QRgb> pixels(const QImage &image);
+
+ColorTree MedianCutQuantization::generateColors(const QImage &image) const
 {
-    ColorTree result{};
+    ColorTree result{pixels(image)};
+    result.splitInto(numColors);
+    return result;
+}
+
+vector<QRgb> pixels(const QImage &image)
+{
+    vector<QRgb> result{};
+
+    for (int y = 0; y < image.height(); y++)
+        for (int x = 0; x < image.width(); x++)
+            result.push_back(image.pixel(x, y));
 
     return result;
 }
 
 void MedianCutQuantization::apply(QImage &image) const
 {
+    ColorTree colors = generateColors(image);
+
     for (int y = 0; y < image.height(); y++)
         for (int x = 0; x < image.width(); x++)
             applyAtPoint(image, QPoint{x, y});
 }
-
 
 void MedianCutQuantization::applyAtPoint(
     QImage &image, const QPoint &toProcess) const

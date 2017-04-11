@@ -24,9 +24,46 @@
 #ifndef COLOR_TREE_HPP
 #define COLOR_TREE_HPP
 
+#include <vector>
+
+#include <QImage>
+
 class ColorTree
 {
+private:
+    enum class Channel {
+        Red, Green, Blue
+    };
+
 public:
+    ColorTree(std::vector<QRgb> allPixels) : root{allPixels}
+    {
+    }
+
+    class Bucket
+    {
+    public:
+        Bucket(std::vector<QRgb> pixels)
+            : pixels{pixels}, resultingColor{average(pixels)}
+        {
+        }
+
+        void splitAtMedian(Channel ch);
+
+        std::vector<QRgb> pixels;
+        QRgb resultingColor;
+
+    private:
+        static QRgb average(std::vector<QRgb> pixels);
+    };
+
+    void splitInto(int numColors);
+
+    Bucket root;
+
+private:
+    int numBuckets() const;
+    std::pair<Channel, Bucket> findWidestBucket() const;
 };
 
 #endif // COLOR_TREE_HPP
