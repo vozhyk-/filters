@@ -76,15 +76,5 @@ QRgb MedianCutQuantization::colorAtPoint(
 
 QRgb MedianCutQuantization::threshold(ColorTree &colors, QRgb color) const
 {
-    optional<QRgb> result = colors.walkInOrder<QRgb>(
-        colors.root,
-        [=](shared_ptr<ColorTree::Bucket> bucket) {
-            //cout << "Checking bucket" << endl;
-            if (bucket->contains(color))
-                return make_optional(bucket->resultingColor);
-            else
-                return optional<QRgb>();
-        });
-
-    return *result;
+    return colors.colorForPixel(color);
 }

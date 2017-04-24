@@ -225,3 +225,19 @@ void setChannel(Channel ch, QRgb &dest, QRgb source)
         throw new invalid_argument("Invalid channel");
     }
 }
+
+QRgb ColorTree::colorForPixel(QRgb pixel)
+{
+    optional<QRgb> result = walkInOrder<QRgb>(
+        root,
+        [=](shared_ptr<Bucket> bucket) {
+            //cout << "Checking bucket" << endl;
+            if (bucket->contains(pixel)) {
+                return make_optional(bucket->resultingColor);
+            } else {
+                return optional<QRgb>();
+            }
+        });
+
+    return *result;
+}

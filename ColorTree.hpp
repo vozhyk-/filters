@@ -104,10 +104,10 @@ public:
     }
 
     void splitInto(int numColors);
-
-    std::shared_ptr<Bucket> root;
+    QRgb colorForPixel(QRgb pixel);
 
 private:
+    std::shared_ptr<Bucket> root;
     int numBuckets;
     std::pair<Channel, std::shared_ptr<Bucket>> findWidestBucket();
 };
