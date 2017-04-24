@@ -228,6 +228,10 @@ void setChannel(Channel ch, QRgb &dest, QRgb source)
 
 QRgb ColorTree::colorForPixel(QRgb pixel)
 {
+    auto cached = colorsForPixelsCache.find(pixel);
+    if (cached != colorsForPixelsCache.end())
+        return cached->second;
+
     optional<QRgb> result = walkInOrder<QRgb>(
         root,
         [=](shared_ptr<Bucket> bucket) {
@@ -239,5 +243,6 @@ QRgb ColorTree::colorForPixel(QRgb pixel)
             }
         });
 
+    colorsForPixelsCache[pixel] = *result;
     return *result;
 }

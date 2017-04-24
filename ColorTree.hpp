@@ -109,6 +109,7 @@ public:
 private:
     std::shared_ptr<Bucket> root;
     int numBuckets;
+    std::map<QRgb, QRgb> colorsForPixelsCache{};
     std::pair<Channel, std::shared_ptr<Bucket>> findWidestBucket();
 };
 
