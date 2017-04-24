@@ -80,7 +80,7 @@ void ColorTree::splitInto(int numColors)
     }
 
 end:
-    cout << "Done splitting." << endl;
+    cout << "Done splitting." << endl << endl;
 }
 
 pair<Channel, shared_ptr<Bucket>> ColorTree::findWidestBucket()
