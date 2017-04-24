@@ -24,6 +24,7 @@
 #ifndef COLOR_TREE_HPP
 #define COLOR_TREE_HPP
 
+#include <iostream>
 #include <vector>
 #include <memory>
 #include <experimental/optional>
@@ -66,7 +67,7 @@ public:
 
         std::vector<QRgb> pixels;
         QRgb resultingColor;
-        ColorRange range;
+        ColorRange range{0, 0};
 
     private:    
         static QRgb average(std::vector<QRgb> pixels);
@@ -81,22 +82,24 @@ public:
         std::shared_ptr<Bucket> bucket,
         std::function<optional<T> (std::shared_ptr<Bucket> bucket)> fun)
     {
-        if (bucket->left) {
+        if (bucket->left && bucket->right) {
+            //std::cout << "Descending left" << std::endl;
             auto result = walkInOrder(bucket->left, fun);
             if (result)
                 return result;
-        }
 
-        auto result = fun(bucket);
-        if (result)
-            return result;
-
-        if (bucket->right) {
-            auto result = walkInOrder(bucket->right, fun);
+            //std::cout << "Descending right" << std::endl;
+            result = walkInOrder(bucket->right, fun);
+            if (result)
+                return result;
+        } else {
+            //std::cout << "Not descending" << std::endl;
+            auto result = fun(bucket);
             if (result)
                 return result;
         }
 
+        //std::cout << "Nothing found." << std::endl;
         return optional<T>();
     }
 
@@ -106,7 +109,7 @@ public:
 
 private:
     int numBuckets;
-    std::pair<Channel, std::shared_ptr<Bucket>> findWidestBucket() const;
+    std::pair<Channel, std::shared_ptr<Bucket>> findWidestBucket();
 };
 
 #endif // COLOR_TREE_HPP

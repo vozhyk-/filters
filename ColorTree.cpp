@@ -24,6 +24,7 @@
 #include "ColorTree.hpp"
 
 #include <iostream>
+#include <cassert>
 
 using namespace std;
 using namespace std::experimental;
@@ -52,29 +53,92 @@ void ColorTree::splitInto(int numColors)
         shared_ptr<Bucket> bucket;
         tie(ch, bucket) = findWidestBucket();
 
-        // 2. Sort it
+        // 2. Sort it by the channel with the highest range
         sort(bucket->pixels.begin(), bucket->pixels.end(),
              [=](QRgb first, QRgb second) {
                  return getChannel(ch, first) < getChannel(ch, second);
              });
 
         // 3. Split it into 2
+        //cout << "Splitting into 2 parts" << endl;
+        auto begin = bucket->pixels.begin();
+        auto end = bucket->pixels.end();
+        cout << "Original length: " << end - begin << endl;
+        if (end - begin <= 1)
+            goto end;
+
+        auto half = begin + bucket->pixels.size() / 2;
+        bucket->left = make_shared<Bucket>(vector<QRgb>(begin, half));
+        bucket->right = make_shared<Bucket>(vector<QRgb>(half, end));
+        cout << "Split into "
+             << bucket->left->pixels.size() << " and "
+             << bucket->right->pixels.size() << " pixels." << endl;
+        bucket->pixels = vector<QRgb>{};
+        numBuckets++;
+        cout << numBuckets << " buckets." << endl;
     }
+
+end:
+    cout << "Done splitting." << endl;
 }
 
-pair<Channel, shared_ptr<Bucket>> ColorTree::findWidestBucket() const
+pair<Channel, shared_ptr<Bucket>> ColorTree::findWidestBucket()
 {
-    // TODO Implement
-    return make_pair(Channel::Red, root);
+    unsigned char maxWidth = 0;
+    shared_ptr<Bucket> widestBucket{nullptr};
+    Channel widestChannel;
+    walkInOrder<bool>(root, [&](shared_ptr<Bucket> bucket) {
+        for (auto ch: allChannels) {
+            unsigned char channelWidth =
+                getChannel(ch, bucket->range.second) -
+                getChannel(ch, bucket->range.first);
+            // cout << "findWidestBucket: Channel width: "
+            //      << int(channelWidth) << endl;
+
+            if (channelWidth >= maxWidth) {
+                // cout << "findWidestBucket: Current widest bucket/channel: "
+                //      << int(channelWidth) << endl;
+                maxWidth = channelWidth;
+                widestChannel = ch;
+                widestBucket = bucket;
+            }
+        }
+
+        return optional<bool>();
+    });
+
+    // cout << "findWidestBucket: Widest bucket/channel: "
+    //      << int(maxWidth) << endl;
+    assert(widestBucket != nullptr);
+    assert(widestBucket->pixels.size() != 0);
+    return make_pair(widestChannel, widestBucket);
+}
+
+void printColor(ostream &stream, QRgb color)
+{
+    stream << "(";
+    for (auto ch: allChannels) {
+        stream << int(getChannel(ch, color)) << ", ";
+    }
+    stream << ")";
 }
 
 bool Bucket::contains(QRgb color)
 {
-    for (auto ch: allChannels)
-        if (getChannel(ch, color) < getChannel(ch, range.first) ||
-            getChannel(ch, color) > getChannel(ch, range.second))
-            return false;
+    //cout << "contains?: Color: "; printColor(cout, color);
+    //cout <<" Range: [";
+    //printColor(cout, range.first); cout << ", ";
+    //printColor(cout, range.second); cout << "]" << endl;
 
+    for (auto ch: allChannels) {
+        if (getChannel(ch, color) < getChannel(ch, range.first) ||
+            getChannel(ch, color) > getChannel(ch, range.second)) {
+            //cout << "No." << endl;
+            return false;
+        }
+    }
+
+    //cout << "Yes." << endl;
     return true;
 }
 
@@ -86,6 +150,7 @@ QRgb Bucket::average(vector<QRgb> pixels)
 {
     ColorTuple sum;
     auto n = pixels.size();
+    assert(n != 0);
 
     for (auto i: pixels)
         sum += ColorTuple(qRed(i), qBlue(i), qGreen(i));
@@ -112,6 +177,9 @@ ColorTuple operator+(ColorTuple first, ColorTuple second)
 
 ColorRange Bucket::getRange(std::vector<QRgb> pixels)
 {
+    if (pixels.size() == 0)
+        return ColorRange{qRgb(0, 0, 0), qRgb(0, 0, 0)};
+
     QRgb min = qRgb(255, 255, 255);
     QRgb max = qRgb(0, 0, 0);
     

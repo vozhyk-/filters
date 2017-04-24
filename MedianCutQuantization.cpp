@@ -54,9 +54,12 @@ void MedianCutQuantization::apply(QImage &image) const
 {
     ColorTree colors = generateColors(image);
 
-    for (int y = 0; y < image.height(); y++)
-        for (int x = 0; x < image.width(); x++)
+    for (int y = 0; y < image.height(); y++) {
+        cout << "Applying at y: " << y << endl;
+        for (int x = 0; x < image.width(); x++) {
             applyAtPoint(image, colors, QPoint{x, y});
+        }
+    }
 }
 
 void MedianCutQuantization::applyAtPoint(
@@ -76,7 +79,7 @@ QRgb MedianCutQuantization::threshold(ColorTree &colors, QRgb color) const
     optional<QRgb> result = colors.walkInOrder<QRgb>(
         colors.root,
         [=](shared_ptr<ColorTree::Bucket> bucket) {
-            // if color is in range
+            //cout << "Checking bucket" << endl;
             if (bucket->contains(color))
                 return make_optional(bucket->resultingColor);
             else
