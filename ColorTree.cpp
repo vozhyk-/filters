@@ -148,12 +148,12 @@ ColorTuple &operator+=(ColorTuple &first, const ColorTuple &second);
 
 QRgb Bucket::average(vector<QRgb> pixels)
 {
-    ColorTuple sum;
+    ColorTuple sum{0, 0, 0};
     auto n = pixels.size();
     assert(n != 0);
 
     for (auto i: pixels)
-        sum += ColorTuple(qRed(i), qBlue(i), qGreen(i));
+        sum += ColorTuple(qRed(i), qGreen(i), qBlue(i));
 
     return qRgb(
         get<0>(sum) / n,
