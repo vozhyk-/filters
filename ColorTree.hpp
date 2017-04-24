@@ -56,6 +56,13 @@ public:
             : pixels{pixels}, resultingColor{average(pixels)},
               range{getRange(pixels)}
         {
+            // std::cout <<" Range: [";
+            // printColor(std::cout, range.first); std::cout << ", ";
+            // printColor(std::cout, range.second); std::cout << "]";
+
+            // std::cout << ", average: ";
+            // printColor(std::cout, resultingColor);
+            // std::cout << std::endl;
         }
 
         void splitAtMedian(Channel ch);
@@ -111,6 +118,7 @@ private:
     int numBuckets;
     std::map<QRgb, QRgb> colorsForPixelsCache{};
     std::pair<Channel, std::shared_ptr<Bucket>> findWidestBucket();
+    static void printColor(std::ostream &stream, QRgb color);
 };
 
 #endif // COLOR_TREE_HPP

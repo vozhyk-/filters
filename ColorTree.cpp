@@ -61,18 +61,19 @@ void ColorTree::splitInto(int numColors)
 
         // 3. Split it into 2
         //cout << "Splitting into 2 parts" << endl;
+        // cout << "Splitting by channel " << int(ch) << endl;
         auto begin = bucket->pixels.begin();
         auto end = bucket->pixels.end();
-        cout << "Original length: " << end - begin << endl;
+        // cout << "Original length: " << end - begin << endl;
         if (end - begin <= 1)
             goto end;
 
         auto half = begin + bucket->pixels.size() / 2;
         bucket->left = make_shared<Bucket>(vector<QRgb>(begin, half));
         bucket->right = make_shared<Bucket>(vector<QRgb>(half, end));
-        cout << "Split into "
-             << bucket->left->pixels.size() << " and "
-             << bucket->right->pixels.size() << " pixels." << endl;
+        // cout << "Split into "
+        //      << bucket->left->pixels.size() << " and "
+        //      << bucket->right->pixels.size() << " pixels." << endl;
         bucket->pixels = vector<QRgb>{};
         numBuckets++;
         cout << numBuckets << " buckets." << endl;
@@ -114,7 +115,7 @@ pair<Channel, shared_ptr<Bucket>> ColorTree::findWidestBucket()
     return make_pair(widestChannel, widestBucket);
 }
 
-void printColor(ostream &stream, QRgb color)
+void ColorTree::printColor(ostream &stream, QRgb color)
 {
     stream << "(";
     for (auto ch: allChannels) {
